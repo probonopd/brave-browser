@@ -1,0 +1,33 @@
+language: cpp
+compiler: gcc
+sudo: require
+dist: trusty
+
+install:
+  - sudo apt-get -y install build-essential libgnome-keyring-dev python-setuptools npm
+
+script:
+  # Build prerequisites
+  - ./src/build/install-build-deps.sh
+  - npm install
+  # Build Chromium
+  - build init
+  - npm run init
+  # Build Brave
+  - npm run build Release
+  # TODO: Move to appdir/ and create valid AppDir structure
+  - exit 0
+  - find appdir/
+  - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+  - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+  # export VERSION=... # linuxdeployqt uses this for naming the file
+  - ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
+
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh Brave*.AppImage*
+  
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)/
