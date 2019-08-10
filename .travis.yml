@@ -5,6 +5,7 @@ dist: trusty
 
 install:
   - sudo apt-get -y install build-essential libgnome-keyring-dev python-setuptools npm
+  - sudo npm i -g npm # Update node.js; needed?
 
 script:
   # Build prerequisites
