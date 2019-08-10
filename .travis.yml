@@ -10,7 +10,6 @@ script:
   # Build prerequisites
   - npm install
   # Build Chromium
-  - build init
   - npm run init
   - ./src/build/install-build-deps.sh
   # Build Brave
